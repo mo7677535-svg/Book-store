@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Order #{{ order.id }}</h1>
+            <p class="text-muted">Placed on {{ order.created_at|date:"F d, Y \a\t H:i" }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <h3 class="text-danger">Rs.{{ order.total_price }}</h3>
+            <span class="badge 
+                {% if order.status == 'pending' %}bg-warning
+                {% elif order.status == 'confirmed' %}bg-info
+                {% elif order.status == 'shipped' %}bg-primary
+                {% elif order.status == 'delivered' %}bg-success
+                {% else %}bg-danger{% endif %} p-2">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Order Items</h5>
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_items %}
+                            <tr>
+                                <td>{{ item.product.title }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>Rs.{{ item.price }}</td>
+                                <td>Rs.{{ item.total }}</td>  {# Use precomputed total #}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>Rs.{{ order.total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Tax:</span>
+                        <span>Rs.0</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong>Total:</strong>
+                        <strong class="text-danger">Rs.{{ order.total_price }}</strong>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <p class="mb-0"><strong>Status:</strong> {{ order.get_status_display }}</p>
+                    </div>
+
+                    <a href="{% url 'profile' %}" class="btn btn-primary w-100">
+                        <i class="fas fa-arrow-left"></i> Back to Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 fw-bold" style="color:#343a40;">Checkout</h1>
+
+    <div class="row g-4">
+        <!-- Order Items & Shipping -->
+        <div class="col-md-8">
+            <!-- Order Items -->
+            <div class="card shadow-sm rounded">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold">Order Items</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead style="background-color:#f8f9fa;">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>{{ item.title }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>Rs.{{ item.price }}</td>
+                                    <td>Rs.{{ item.total }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div class="card shadow-sm rounded mt-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold">Shipping Information</h5>
+                    <p><strong>Name:</strong> {{ user.get_full_name|default:user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p class="text-muted">Shipping address will be delivered to your registered email.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>Rs.{{ total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Tax:</span>
+                        <span>Rs.0</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong>Total:</strong>
+                        <strong class="text-danger">Rs.{{ total_price }}</strong>
+                    </div>
+
+                    <!-- Confirm Order -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn w-100 mb-2" 
+                                style="background-color:#28a745; color:white; border-radius:8px; transition: all 0.3s;">
+                            <i class="fas fa-check-circle me-2"></i> Confirm Order
+                        </button>
+                    </form>
+
+                    <!-- Back to Cart -->
+                    <a href="{% url 'cart' %}" class="btn w-100 border border-secondary" 
+                       style="color:#343a40; background-color:white; border-radius:8px; transition: all 0.3s;">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hover Effects -->
+<style>
+.btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f3f8;
+    transition: background-color 0.3s;
+}
+</style>
+{% endblock %}

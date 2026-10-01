@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row g-4">
+
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="filter-box p-3 shadow-sm rounded">
+                <h5 class="mb-3 fw-bold">Filters</h5>
+
+                <div class="list-group custom-list">
+                    <a href="{% url 'products' %}" class="list-group-item list-group-item-action">
+                        All Categories
+                    </a>
+
+                    {% for category in categories %}
+                    <a href="?category={{ category }}"
+                       class="list-group-item list-group-item-action">
+                        {{ category }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="col-md-9">
+            <h2 class="mb-4 fw-bold">Browse Our Collection</h2>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 product-card border-0 shadow-sm position-relative">
+
+                        <!-- 🔴 OUT OF STOCK BADGE -->
+                        {% if product.stock_quantity == 0 %}
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                            Out of Stock
+                        </span>
+                        {% endif %}
+
+                        <!-- Image -->
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top product-img" alt="{{ product.title }}">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1507842217343-583f20270319?w=300"
+                                 class="card-img-top product-img"
+                                 alt="Default image">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text text-muted mb-1">by {{ product.author }}</p>
+                            <p class="card-text text-danger fw-bold mb-2">Rs.{{ product.price }}</p>
+                            <span class="badge bg-secondary">{{ product.category }}</span>
+                        </div>
+
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <a href="{% url 'product_detail' product.id %}"
+                               class="btn btn-primary btn-sm w-100 mb-2 action-btn">
+                                View Details
+                            </a>
+
+                            <!-- ✅ CONDITIONAL ADD TO CART -->
+                            {% if product.stock_quantity > 0 %}
+                            <form method="post" action="{% url 'add_to_cart' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="submit" class="btn btn-success btn-sm w-100 action-btn">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            </form>
+                            {% else %}
+                            <button class="btn btn-danger btn-sm w-100 action-btn" disabled>
+                                <i class="fas fa-times-circle"></i> Out of Stock
+                            </button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-center text-muted">No products found</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+a {
+    text-decoration: none !important;
+}
+
+/* Sidebar */
+.filter-box {
+    background: #fff;
+    border-radius: 12px;
+}
+
+.custom-list .list-group-item {
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+}
+
+.custom-list .list-group-item:hover {
+    background-color: #f1f3f5;
+    padding-left: 12px;
+}
+
+/* Cards */
+.product-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* Image */
+.product-img {
+    height: 230px;
+    object-fit: cover;
+}
+
+/* Buttons */
+.action-btn {
+    border-radius: 8px;
+}
+</style>
+{% endblock %}

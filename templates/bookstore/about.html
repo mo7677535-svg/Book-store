@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Hero Section -->
+    {% if about %}
+    <div class="hero-section text-white text-center py-5 mb-5 rounded" style="background-image: url('{{ about.img.url }}'); background-size: cover; background-position: center;">
+        <div class="overlay p-5 rounded" style="background-color: rgba(0,0,0,0.5);">
+            <h1 class="display-4 fw-bold mb-3">About Pustak Hub</h1>
+            <p class="lead mb-0">Learn more about our mission, vision, and passion for books.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- About Content -->
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0 rounded mb-5">
+                <div class="card-body p-4">
+                    {% if about %}
+                        {{ about.content|linebreaks }}
+                    {% else %}
+                        <p class="text-center text-muted">About content is not available yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional Team / Story Section -->
+    <div class="row text-center mb-5">
+        <div class="col">
+            <h2 class="fw-bold mb-3">Our Story</h2>
+            <p class="text-muted">Pustak Hub started with a vision to make books accessible to everyone. We are passionate about connecting readers with the right books and providing a seamless online experience.</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hero Section */
+.hero-section {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    /* use contain so logo fits, but allow larger visible area using viewport height */
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center top !important;
+}
+
+.hero-section .overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* responsive heights: use viewport units so it scales with display */
+    min-height: 30vh;
+    color: white;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+/* Larger screens: make the hero taller so logo is more visible */
+@media (min-width: 992px) {
+    .hero-section .overlay { min-height: 36vh; padding-top: 3.5rem; padding-bottom: 3.5rem; }
+}
+
+/* Extra large screens */
+@media (min-width: 1400px) {
+    .hero-section .overlay { min-height: 42vh; }
+}
+
+/* Small screens: keep it compact */
+@media (max-width: 576px) {
+    .hero-section .overlay { min-height: 26vh; padding-top: 1.5rem; padding-bottom: 1.5rem; }
+}
+
+/* Card Styling */
+.card {
+    border-radius: 12px;
+}
+
+/* Typography */
+.lead {
+    font-size: 1.2rem;
+}
+
+h2 {
+    font-weight: 600;
+}
+</style>
+{% endblock %}
